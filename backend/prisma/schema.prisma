@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id                 String       @id @default(cuid())
+  email              String       @unique
+  name               String?
+  googleAccessToken  String?
+  googleRefreshToken String?
+  createdAt          DateTime     @default(now())
+  filterRules        FilterRule[]
+  emails             Email[]
+}
+
+model FilterRule {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  name           String
+  conditionType  String
+  conditionValue String
+  matchType      String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+}
+
+model Email {
+  id         String        @id @default(cuid())
+  gmailId    String        @unique
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  subject    String
+  sender     String
+  receivedAt DateTime
+  bodyText   String
+  isRead     Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  summary    EmailSummary?
+}
+
+model EmailSummary {
+  id          String   @id @default(cuid())
+  emailId     String   @unique
+  email       Email    @relation(fields: [emailId], references: [id])
+  summaryText String
+  importance  String
+  keywords    String
+  createdAt   DateTime @default(now())
+}
