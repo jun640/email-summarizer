@@ -16,7 +16,7 @@ export default function RulesPage() {
 
   const handleSave = (data: { name: string; conditionType: string; conditionValue: string; matchType: string }) => {
     if (editingRule) {
-      updateRule.mutate({ id: editingRule.id, ...data }, { onSuccess: () => { setShowModal(false); setEditingRule(null); } });
+      updateRule.mutate({ id: editingRule.id, ...data } as any, { onSuccess: () => { setShowModal(false); setEditingRule(null); } });
     } else {
       createRule.mutate(data as any, { onSuccess: () => setShowModal(false) });
     }
